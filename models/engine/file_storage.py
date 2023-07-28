@@ -49,14 +49,28 @@ class FileStorage:
             json.dump(json_objects, f)
 
     def reload(self):
-        """deserializes the JSON file to __objects"""
+        """Deserializes the JSON file to __objects"""
         try:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
-            for key in jo:
-                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
-        except:
-            pass
+                for key in jo:
+                    try:
+                        class_name = jo[key]["__class__"]
+                        if class_name in classes:
+                            obj_class = classes[class_name]
+                            self.__objects[key] = obj_class(**jo[key])
+                        else:
+                            raise ValueError(f"Unknown class '{class_name}' \
+                            during deserialization.")
+                    except Exception as e:
+                        print(f"Error while deserializing object with key \
+                        '{key}': {e}")
+                    except FileNotFoundError:
+                        print(f"Error: File '{self.__file_path}' not found \
+                        during deserialization.")
+                    except json.JSONDecodeError as e:
+                        print(f"Error: Invalid JSON format in\
+                        '{self.__file_path}': {e}")
 
     def delete(self, obj=None):
         """delete obj from __objects if it’s inside"""
@@ -64,6 +78,25 @@ class FileStorage:
             key = obj.__class__.__name__ + '.' + obj.id
             if key in self.__objects:
                 del self.__objects[key]
+
+    def get(self, cls, id):
+        """retrieve just one object"""
+        if cls is not None and id is not None:
+            return self.__objects.get(cls, {}).get(id)
+        else:
+            return None
+
+    def count(self, cls=None):
+        """counts the number of objects in storage of a certain class
+        or all objects in storage when no class given
+        """
+        if cls is not None:
+            return len(self.__objects.get(cls, {}))
+        else:
+            total_count = 0
+            for obj_dict in self.__objects.values():
+                total_count += len(obj_dict)
+            return total_count()
 
     def close(self):
         """call reload() method for deserializing the JSON file to objects"""
