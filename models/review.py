@@ -11,7 +11,7 @@ class Review(BaseModel, Base):
     """Representation of Review """
     if models.storage_t == 'db':
         __tablename__ = 'reviews'
-        __table_args_ = (
+        __table_args__ = (
             {'mysql_default_charset': 'latin1'})
         place_id = Column(String(60), ForeignKey('places.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
