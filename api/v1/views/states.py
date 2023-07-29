@@ -51,3 +51,17 @@ def state_put(state_id):
 
     storage.save
     return make_response(jsonify(state.to_dict()), 200)
+
+
+@app_views.route("states/<state_id>", methods=['POST'], strict_slashes=False)
+def state_post():
+    """creates a new state object"""
+    new_state = request.get_json()
+    if not new_state:
+        abort(400, "Not a JSON")
+    if "name" not in new_state:
+        abort(400, "Missing name")
+    state = State(**new_state)
+    storage.new(state)
+    storage.save()
+    return make_response(jsonify(amenity.to_dict()), 201)
