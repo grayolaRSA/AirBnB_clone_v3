@@ -17,7 +17,7 @@ def states():
 def state(state_id):
     """returns a single state object data according to id"""
     state = storage.get("State", state_id)
-    if not else:
+    if not state:
         abort(404)
     return jsonify(state.to_dict())
 
