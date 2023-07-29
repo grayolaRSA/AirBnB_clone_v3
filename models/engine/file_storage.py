@@ -53,10 +53,30 @@ class FileStorage:
         try:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
-            for key in jo:
-                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
+                for key in jo:
+                    self.__objects[key] = \
+                        classes[jo[key]["__class__"]](**jo[key])
         except:
             pass
+
+    def get(self, cls, id):
+        """retrieve just one object"""
+        key = "{}.{}".format(cls, id)
+        if key in self.__objects.keys():
+            return self.__objects[key]
+        return None
+
+    def count(self, cls=None):
+        """counts the number of objects in storage of a certain class
+        or all objects in storage when no class given
+        """
+        if cls:
+            count = 0
+            for obj in self.__objects.values():
+                if obj.__class__.__name__ == cls:
+                    count += 1
+            return count
+        return len(self.__objects)
 
     def delete(self, obj=None):
         """delete obj from __objects if it’s inside"""
