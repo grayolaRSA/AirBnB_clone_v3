@@ -91,7 +91,7 @@ class DBStorage:
             for cls in classes:
                 count = self.__session.query(func.count(cls)).scalar()
                 total_count += count
-            return total_count()
+            return total_count
 
     def close(self):
         """call remove() method on the private session attribute"""
