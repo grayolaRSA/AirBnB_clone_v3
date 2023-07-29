@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """States blueprint page """
-from . import app_views
+from api.v1.views import app_views
 from flask import jsonify, request, abort, make_response
 from models import storage
 from models.state import State
@@ -13,7 +13,7 @@ def states():
     return jsonify([obj.to_dict() for obj in d_states.values()])
 
 
-@app_views.route("states/<state_id>", methods=['GET'], strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=['GET'], strict_slashes=False)
 def state(state_id):
     """returns a single state object data according to id"""
     state = storage.get("State", state_id)
@@ -22,7 +22,7 @@ def state(state_id):
     return jsonify(state.to_dict())
 
 
-@app_views.route("states/<state_id>", methods=['DELETE'], strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=['DELETE'], strict_slashes=False)
 def state_del(state_id):
     """deletes a state object according to its id"""
     state = storage.get("State", state_id)
@@ -34,7 +34,7 @@ def state_del(state_id):
     return make_response(jsonify({}), 200)
 
 
-@app_views.route("states/<state_id>", methods=['PUT'], strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)
 def state_put(state_id):
     """updates a state object according to its id"""
     state = storage.get("State", state_id)
@@ -53,7 +53,7 @@ def state_put(state_id):
     return make_response(jsonify(state.to_dict()), 200)
 
 
-@app_views.route("states/<state_id>", methods=['POST'], strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=['POST'], strict_slashes=False)
 def state_post():
     """creates a new state object"""
     new_state = request.get_json()
@@ -64,4 +64,4 @@ def state_post():
     state = State(**new_state)
     storage.new(state)
     storage.save()
-    return make_response(jsonify(amenity.to_dict()), 201)
+    return make_response(jsonify(state.to_dict()), 201)
