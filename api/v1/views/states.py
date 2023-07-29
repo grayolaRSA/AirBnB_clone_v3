@@ -35,7 +35,7 @@ def state_del(state_id):
 
 
 @app_views.route("states/<state_id>", methods=['PUT'], strict_slashes=False)
-def state_put():
+def state_put(state_id):
     """updates a state object according to its id"""
     state = storage.get("State", state_id)
     if not state:
