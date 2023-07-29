@@ -73,11 +73,8 @@ class DBStorage:
 
     def get(self, cls, id):
         """retrieve just one object from database by class and id"""
-        if cls is not None and id is not None:
-            query = self.__session.query(cls).get(id)
-            return query
-        else:
-            return None
+        obj = self.__session.query(cls).get(id)
+        return obj
 
     def count(self, cls=None):
         """counts the number of objects in storage of a certain class
@@ -86,10 +83,10 @@ class DBStorage:
         total_count = 0
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
-                count = len(self.__session.query(classes[clss]).all())
-                total_count += count
+                total_count += len(self.__session.query(classes[clss]).all())
         return total_count
 
-    def close(self):
-        """call remove() method on the private session attribute"""
-        self.__session.remove()
+
+def close(self):
+    """call remove() method on the private session attribute"""
+    self.__session.remove()
