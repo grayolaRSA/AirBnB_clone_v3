@@ -11,10 +11,11 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app)
 cors = CORS(app, resources={
-r"/*": {
-"origins": "0.0.0.0"
-}
+    r"/*": {
+        "origins": "0.0.0.0"
+    }
 })
+
 
 @app.route('/')
 def hello_world():
@@ -25,6 +26,12 @@ def hello_world():
 def close(exception):
     """tears down the app when its closed"""
     storage.close()
+
+
+@app.errorhandler(404)
+def not_fnd(error):
+    """ Returns 404 status JSON response"""
+    return make_response(jsonify({"error": "Not found"}), 404)
 
 
 if __name__ == '__main__':
