@@ -15,7 +15,7 @@ def users_all():
     users_all = []
     users = storage.all("User").values()
     for user in users:
-        users_all.append(user.to_json())
+        users_all.append(user.to_dict())
     return jsonify(users_all)
 
 
@@ -25,7 +25,7 @@ def user_get(user_id):
     user = storage.get("User", user_id)
     if user is None:
         abort(404)
-    user = user.to_json()
+    user = user.to_dict()
     return jsonify(user)
 
 
@@ -53,7 +53,7 @@ def user_post():
         abort(400, "Missing password")
     user = User(**data)
     user.save()
-    user = user.to_json()
+    user = user.to_dict()
     return jsonify(user), 201
 
 
@@ -71,5 +71,5 @@ def user_put(user_id):
         if key not in ignore_keys:
             user.bm_update(key, value)
     user.save()
-    user = user.to_json()
+    user = user.to_dict()
     return jsonify(user), 200
