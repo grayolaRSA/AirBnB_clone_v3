@@ -75,7 +75,7 @@ class DBStorage:
         """retrieve just one object from database by class and id"""
         if cls in classes:
             objects = self.__session.query(classes[cls]).get(id)
-            return obj
+            return objects
         else:
             return None
 
