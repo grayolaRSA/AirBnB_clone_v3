@@ -4,8 +4,10 @@ from . import app_views
 from flask import jsonify
 from models import storage
 
+
 @app_views.route("/status")
 def status():
+    """returns status of HTTP request"""
     return jsonify({"status": "OK"})
 
 
