@@ -20,7 +20,7 @@ def cities_all(state_id):
     cities = storage.all("City").values()
     for city in cities:
         if city.state_id == state_id:
-            cities_all.append(city.to_json())
+            cities_all.append(city.to_dict())
     return jsonify(cities_all)
 
 
@@ -30,7 +30,7 @@ def city_get(city_id):
     city = storage.get("City", city_id)
     if city is None:
         abort(404)
-    city = city.to_json()
+    city = city.to_dict()
     return jsonify(city)
 
 
@@ -61,7 +61,7 @@ def city_post(state_id):
     city = City(**data)
     city.state_id = state_id
     city.save()
-    city = city.to_json()
+    city = city.to_dict()
     return jsonify(city), 201
 
 
@@ -79,5 +79,5 @@ def city_put(city_id):
         if key not in ignore_keys:
             city.bm_update(key, value)
     city.save()
-    city = city.to_json()
+    city = city.to_dict()
     return jsonify(city), 200
