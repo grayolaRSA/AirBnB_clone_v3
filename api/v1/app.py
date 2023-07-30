@@ -10,7 +10,11 @@ import os
 app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app)
-
+cors = CORS(app, resources={
+r"/*": {
+"origins": "0.0.0.0"
+}
+})
 
 @app.route('/')
 def hello_world():
