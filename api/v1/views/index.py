@@ -2,7 +2,7 @@
 """Index blueprint page """
 from . import app_views
 from flask import jsonify
-
+from models import storage
 
 @app_views.route("/status")
 def status():
