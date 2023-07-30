@@ -2,9 +2,11 @@
 """Places blueprint page """
 from . import app_views
 from flask import jsonify, request, abort, make_response
+from models.city import City
 from models import storage
 from models.place import Place
-from models.city import City
+from models.user import User
+from os import getenv
 
 
 @app_views.route("/cities/<city_id>/places",
@@ -24,7 +26,7 @@ def place(place_id):
     places = storage.get("Place", place_id)
     if not places:
         abort(404)
-    return jsonify(placeses.to_dict())
+    return jsonify(places.to_dict())
 
 
 @app_views.route("places/<place_id>",
@@ -70,7 +72,8 @@ def place_post(city_id):
     new_place = request.get_json()
     if not city_id:
         abort(404)
-    if not user_id:
+    user_id = new_place['user_id']
+    if not storage.get("User", user_id):
         abort(404)
     if not new_place:
         abort(400, "Not a JSON")
