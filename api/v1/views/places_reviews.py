@@ -20,7 +20,7 @@ def reviews_all(place_id):
     reviews = storage.all("Review").values()
     for review in reviews:
         if review.place_id == place_id:
-            reviews_all.append(review.to_json())
+            reviews_all.append(review.to_dict())
     return jsonify(reviews_all)
 
 
@@ -30,7 +30,7 @@ def review_get(review_id):
     review = storage.get("Review", review_id)
     if review is None:
         abort(404)
-    review = review.to_json()
+    review = review.to_dict()
     return jsonify(review)
 
 
@@ -66,7 +66,7 @@ def review_post(place_id):
     review = Review(**data)
     review.place_id = place_id
     review.save()
-    review = review.to_json()
+    review = review.to_dict()
     return jsonify(review), 201
 
 
@@ -84,5 +84,5 @@ def review_put(review_id):
         if key not in ignore_keys:
             review.bm_update(key, value)
     review.save()
-    review = review.to_json()
+    review = review.to_dict()
     return jsonify(review), 200
