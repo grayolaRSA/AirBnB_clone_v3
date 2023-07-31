@@ -81,7 +81,6 @@ def place_post(city_id):
     if not user:
         abort(404)
 
-
     if "user_id" not in http_request:
         abort(400, "Missing user_id")
 
