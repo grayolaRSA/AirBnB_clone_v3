@@ -38,7 +38,7 @@ def place_del(place_id):
     if not places:
         abort(404)
     else:
-        place.delete()
+        places.delete()
         storage.save()
     return make_response(jsonify({}), 200)
 
@@ -58,10 +58,10 @@ def place_put(place_id):
 
     for j, k in http_request.items():
         if j != 'id' and j != 'created_at' and j != 'updated_at':
-            setattr(place, j, k)
+            setattr(places, j, k)
 
     storage.save
-    return make_response(jsonify(place.to_dict()), 200)
+    return make_response(jsonify(places.to_dict()), 200)
 
 
 @app_views.route("cities/<city_id>/places",
@@ -69,19 +69,26 @@ def place_put(place_id):
                  strict_slashes=False)
 def place_post(city_id):
     """creates a new place object"""
-    new_place = request.get_json()
-    if not city_id:
+    city = storage.get("City", city_id)
+    if not city:
         abort(404)
-    user_id = new_place['user_id']
-    if not storage.get("User", user_id):
-        abort(404)
-    if not new_place:
+
+    http_request = request.get_json()
+    if not http_request:
         abort(400, "Not a JSON")
-    if "user_id" not in new_place:
+
+    user = storage.get("User", http_request["user_id"])
+    if not user:
+        abort(404)
+
+
+    if "user_id" not in http_request:
         abort(400, "Missing user_id")
-    if "name" not in new_place:
+
+    if "name" not in http_request:
         abort(400, "Missing name")
-    place = Place(**new_place)
-    storage.new(place)
+
+    new_place = Place(city_id=city_id, **http_request)
+    storage.new(new_place)
     storage.save()
-    return make_response(jsonify(place.to_dict()), 201)
+    return make_response(jsonify(new_place.to_dict()), 201)
